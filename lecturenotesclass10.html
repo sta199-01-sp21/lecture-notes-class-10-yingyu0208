@@ -435,7 +435,7 @@ glimpse(Arthritis)</code></pre>
 <p>Suppose we draw a single marble from our imaginary box, where all the marbles are equally likely to be selected. What is the probability the marble is blue? <strong><em>3/8</em></strong> How about white? <strong><em>1/8</em></strong></p>
 <p>We can simulate this “drawing” with the <code>sample()</code> function.</p>
 <pre class="r"><code>sample(marbles, size = 1)</code></pre>
-<pre><code>#&gt; [1] &quot;blue&quot;</code></pre>
+<pre><code>#&gt; [1] &quot;red&quot;</code></pre>
 <p>We produced one random outcome from this experiment. To estimate the probability of say getting a white marble, we need to repeat this experiment many many times.</p>
 <p>In the <code>sample()</code> function we can change the <code>size</code> argument and set <code>replace = TRUE</code>. Setting <code>replace = TRUE</code> allows to draw from our population of eight marbles each time. This way we can easily simulate our marble-drawing experiment.</p>
 <pre class="r"><code>draw_results &lt;- sample(marbles, size = 10000, replace = TRUE)</code></pre>
@@ -443,7 +443,7 @@ glimpse(Arthritis)</code></pre>
 prop.table(counts)</code></pre>
 <pre><code>#&gt; draw_results
 #&gt;   blue    red  white 
-#&gt; 0.3739 0.5041 0.1220</code></pre>
+#&gt; 0.3690 0.5124 0.1186</code></pre>
 <p>How close is this value to the “true” probability? <strong><em>Very close or the same to the probabilities you would expect that we calculated earlier; law of large numbers (more trials = closer to true percentage)</em></strong></p>
 <p><strong>To summarize our process:</strong></p>
 <ol style="list-style-type: decimal">
@@ -465,16 +465,16 @@ two_draw_results</code></pre>
 <pre><code>#&gt; # A tibble: 10,000 x 2
 #&gt;    draw_1 draw_2
 #&gt;    &lt;chr&gt;  &lt;chr&gt; 
-#&gt;  1 red    red   
-#&gt;  2 blue   red   
-#&gt;  3 blue   red   
-#&gt;  4 red    blue  
-#&gt;  5 red    red   
-#&gt;  6 red    blue  
-#&gt;  7 blue   red   
-#&gt;  8 red    blue  
-#&gt;  9 blue   red   
-#&gt; 10 blue   red   
+#&gt;  1 blue   blue  
+#&gt;  2 white  red   
+#&gt;  3 red    blue  
+#&gt;  4 white  red   
+#&gt;  5 blue   red   
+#&gt;  6 white  red   
+#&gt;  7 blue   blue  
+#&gt;  8 red    white 
+#&gt;  9 red    blue  
+#&gt; 10 blue   blue  
 #&gt; # … with 9,990 more rows</code></pre>
 <p>How can we add a variable to <code>two_draw_results</code> to see if <code>draw_1</code> and <code>draw_2</code> match?</p>
 <pre class="r"><code>two_draw_results &lt;- two_draw_results %&gt;% 
@@ -483,16 +483,16 @@ two_draw_results</code></pre>
 <pre><code>#&gt; # A tibble: 10,000 x 3
 #&gt;    draw_1 draw_2 color_match
 #&gt;    &lt;chr&gt;  &lt;chr&gt;  &lt;lgl&gt;      
-#&gt;  1 red    red    TRUE       
-#&gt;  2 blue   red    FALSE      
-#&gt;  3 blue   red    FALSE      
-#&gt;  4 red    blue   FALSE      
-#&gt;  5 red    red    TRUE       
-#&gt;  6 red    blue   FALSE      
-#&gt;  7 blue   red    FALSE      
-#&gt;  8 red    blue   FALSE      
-#&gt;  9 blue   red    FALSE      
-#&gt; 10 blue   red    FALSE      
+#&gt;  1 blue   blue   TRUE       
+#&gt;  2 white  red    FALSE      
+#&gt;  3 red    blue   FALSE      
+#&gt;  4 white  red    FALSE      
+#&gt;  5 blue   red    FALSE      
+#&gt;  6 white  red    FALSE      
+#&gt;  7 blue   blue   TRUE       
+#&gt;  8 red    white  FALSE      
+#&gt;  9 red    blue   FALSE      
+#&gt; 10 blue   blue   TRUE       
 #&gt; # … with 9,990 more rows</code></pre>
 <p>All that remains is to compute the relative frequency of the observed outcomes from our many simulations.</p>
 <pre class="r"><code>two_draw_results %&gt;% 
@@ -501,15 +501,29 @@ two_draw_results</code></pre>
 <pre><code>#&gt; # A tibble: 2 x 3
 #&gt;   color_match     n proportion
 #&gt; * &lt;lgl&gt;       &lt;int&gt;      &lt;dbl&gt;
-#&gt; 1 FALSE        5991      0.599
-#&gt; 2 TRUE         4009      0.401</code></pre>
+#&gt; 1 FALSE        5982      0.598
+#&gt; 2 TRUE         4018      0.402</code></pre>
 </div>
 </div>
 <div id="practice" class="section level2">
 <h2>Practice</h2>
 <p>Suppose you roll two fair six-sided dice. Which has a higher probability: the square of dice roll 1 is equal to dice roll 2; or the absolute value of the difference between dice roll 1 and dice roll 2 is equal to 4.</p>
 <p>Perform a simulation to compute this empirical probability.</p>
-<p>Write down your guess to the answer before you calculate it. ***</p>
+<p>Write down your guess to the answer before you calculate it. <strong><em>Absolute value has higher probability</em></strong></p>
+<pre class="r"><code>roll_results &lt;- tibble(
+  die_1 = replicate(n = 10000, expr = sample(1:6, size = 1)),
+  die_2 = replicate(n = 10000, expr = sample(1:6, size = 1))
+)</code></pre>
+<pre class="r"><code>roll_results &lt;- roll_results %&gt;% 
+  mutate(event_1 = die_1^2 == die_2,
+         event_2 = abs(die_1 - die_2) == 4)</code></pre>
+<pre class="r"><code>roll_results %&gt;%
+  summarise(event_1_prob = mean(event_1),
+            event_2_prob = mean(event_2))</code></pre>
+<pre><code>#&gt; # A tibble: 1 x 2
+#&gt;   event_1_prob event_2_prob
+#&gt;          &lt;dbl&gt;        &lt;dbl&gt;
+#&gt; 1       0.0556        0.113</code></pre>
 </div>
 <div id="additional-resources-please-look-at-before-weds." class="section level2">
 <h2>Additional Resources-please look at before Weds.</h2>
