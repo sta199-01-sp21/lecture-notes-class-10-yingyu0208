@@ -52,16 +52,16 @@ xtabs(~ Treatment + Improved, data = Arthritis) %>%
   84
 
 - What is the probability a randomly selected patient received the placebo?
-***43/84
+  43/84
 
 - What is the probability a randomly selected patient received the placebo and had a marked improvement?
-***7/84
+  7/84
   
 - What is the probability a randomly selected patient received the placebo and the treatment?
-***0; disjoint probability
+  0; disjoint probability
   
 - What is the probability a randomly selected patient had some improvement or was on the treatment?
-***(14/84)+(41/84)-(7/84)=48/84
+  (14/84)+(41/84)-(7/84)=48/84
 
 ## Using computer simulations to calculate probabilities
 
@@ -76,9 +76,9 @@ marbles <- c("red", "red", "white", "red", "blue", "blue", "red", "blue")
 
 Suppose we draw a single marble from our imaginary box, where all the marbles
 are equally likely to be selected. What is the probability the marble is blue?
-***3/8
+***3/8***
 How about white?
-***1/8
+***1/8***
 
 We can simulate this "drawing" with the `sample()` function.
 
@@ -105,6 +105,7 @@ prop.table(counts)
 ```
 
 How close is this value to the "true" probability?
+***Very close or the same to the probabilities you would expect that we calculated earlier; law of large numbers (more trials = closer to true percentage)***
 
 **To summarize our process:**
 
@@ -121,6 +122,7 @@ color if we make two draws with replacement? We haven't discussed how to
 compute this theoretically yet, but this is what computers are good at.
 
 Before we do this, what is your guess as to what the probability will be?
+***Not that likely, slightly less than 50%***
 
 We'll still use `sample()` to run our simulation many times, but we'll
 use `dplyr` functions to compute the relative frequencies.
@@ -160,6 +162,7 @@ difference between dice roll 1 and dice roll 2 is equal to 4.
 Perform a simulation to compute this empirical probability.
 
 Write down your guess to the answer before you calculate it.
+***
 
 ```{r simulate_rolls}
 

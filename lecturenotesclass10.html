@@ -420,10 +420,10 @@ glimpse(Arthritis)</code></pre>
 #&gt;   Sum       42   14     28  84</code></pre>
 <ul>
 <li><p>How many patients were enrolled in the clinical trial? 84</p></li>
-<li><p>What is the probability a randomly selected patient received the placebo? ***43/84</p></li>
-<li><p>What is the probability a randomly selected patient received the placebo and had a marked improvement? ***7/84</p></li>
-<li><p>What is the probability a randomly selected patient received the placebo and the treatment? ***0; disjoint probability</p></li>
-<li><p>What is the probability a randomly selected patient had some improvement or was on the treatment? ***(14/84)+(41/84)-(7/84)=48/84</p></li>
+<li><p>What is the probability a randomly selected patient received the placebo? 43/84</p></li>
+<li><p>What is the probability a randomly selected patient received the placebo and had a marked improvement? 7/84</p></li>
+<li><p>What is the probability a randomly selected patient received the placebo and the treatment? 0; disjoint probability</p></li>
+<li><p>What is the probability a randomly selected patient had some improvement or was on the treatment? (14/84)+(41/84)-(7/84)=48/84</p></li>
 </ul>
 </div>
 <div id="using-computer-simulations-to-calculate-probabilities" class="section level2">
@@ -432,10 +432,10 @@ glimpse(Arthritis)</code></pre>
 <h4>Example</h4>
 <p>Recall that a <strong>vector</strong> is the basic building block in R. Let’s create a vector called <code>marbles</code>.</p>
 <pre class="r"><code>marbles &lt;- c(&quot;red&quot;, &quot;red&quot;, &quot;white&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;blue&quot;, &quot;red&quot;, &quot;blue&quot;)</code></pre>
-<p>Suppose we draw a single marble from our imaginary box, where all the marbles are equally likely to be selected. What is the probability the marble is blue? <strong><em>3/8 How about white? </em></strong>1/8</p>
+<p>Suppose we draw a single marble from our imaginary box, where all the marbles are equally likely to be selected. What is the probability the marble is blue? <strong><em>3/8</em></strong> How about white? <strong><em>1/8</em></strong></p>
 <p>We can simulate this “drawing” with the <code>sample()</code> function.</p>
 <pre class="r"><code>sample(marbles, size = 1)</code></pre>
-<pre><code>#&gt; [1] &quot;red&quot;</code></pre>
+<pre><code>#&gt; [1] &quot;blue&quot;</code></pre>
 <p>We produced one random outcome from this experiment. To estimate the probability of say getting a white marble, we need to repeat this experiment many many times.</p>
 <p>In the <code>sample()</code> function we can change the <code>size</code> argument and set <code>replace = TRUE</code>. Setting <code>replace = TRUE</code> allows to draw from our population of eight marbles each time. This way we can easily simulate our marble-drawing experiment.</p>
 <pre class="r"><code>draw_results &lt;- sample(marbles, size = 10000, replace = TRUE)</code></pre>
@@ -443,8 +443,8 @@ glimpse(Arthritis)</code></pre>
 prop.table(counts)</code></pre>
 <pre><code>#&gt; draw_results
 #&gt;   blue    red  white 
-#&gt; 0.3699 0.5017 0.1284</code></pre>
-<p>How close is this value to the “true” probability?</p>
+#&gt; 0.3739 0.5041 0.1220</code></pre>
+<p>How close is this value to the “true” probability? <strong><em>Very close or the same to the probabilities you would expect that we calculated earlier; law of large numbers (more trials = closer to true percentage)</em></strong></p>
 <p><strong>To summarize our process:</strong></p>
 <ol style="list-style-type: decimal">
 <li>We defined the sample space for our experiment - <code>marbles</code></li>
@@ -455,7 +455,7 @@ prop.table(counts)</code></pre>
 <div id="another-example" class="section level4">
 <h4>Another example</h4>
 <p>What if we want to compute the probability of getting two marbles of the same color if we make two draws with replacement? We haven’t discussed how to compute this theoretically yet, but this is what computers are good at.</p>
-<p>Before we do this, what is your guess as to what the probability will be?</p>
+<p>Before we do this, what is your guess as to what the probability will be? <strong><em>Not that likely, slightly less than 50%</em></strong></p>
 <p>We’ll still use <code>sample()</code> to run our simulation many times, but we’ll use <code>dplyr</code> functions to compute the relative frequencies.</p>
 <pre class="r"><code>two_draw_results &lt;- tibble(
   draw_1 = sample(marbles, size = 10000, replace = TRUE),
@@ -465,15 +465,15 @@ two_draw_results</code></pre>
 <pre><code>#&gt; # A tibble: 10,000 x 2
 #&gt;    draw_1 draw_2
 #&gt;    &lt;chr&gt;  &lt;chr&gt; 
-#&gt;  1 red    blue  
-#&gt;  2 red    red   
-#&gt;  3 red    red   
-#&gt;  4 blue   blue  
-#&gt;  5 blue   white 
-#&gt;  6 blue   red   
-#&gt;  7 red    red   
-#&gt;  8 blue   red   
-#&gt;  9 red    red   
+#&gt;  1 red    red   
+#&gt;  2 blue   red   
+#&gt;  3 blue   red   
+#&gt;  4 red    blue  
+#&gt;  5 red    red   
+#&gt;  6 red    blue  
+#&gt;  7 blue   red   
+#&gt;  8 red    blue  
+#&gt;  9 blue   red   
 #&gt; 10 blue   red   
 #&gt; # … with 9,990 more rows</code></pre>
 <p>How can we add a variable to <code>two_draw_results</code> to see if <code>draw_1</code> and <code>draw_2</code> match?</p>
@@ -483,15 +483,15 @@ two_draw_results</code></pre>
 <pre><code>#&gt; # A tibble: 10,000 x 3
 #&gt;    draw_1 draw_2 color_match
 #&gt;    &lt;chr&gt;  &lt;chr&gt;  &lt;lgl&gt;      
-#&gt;  1 red    blue   FALSE      
-#&gt;  2 red    red    TRUE       
-#&gt;  3 red    red    TRUE       
-#&gt;  4 blue   blue   TRUE       
-#&gt;  5 blue   white  FALSE      
-#&gt;  6 blue   red    FALSE      
-#&gt;  7 red    red    TRUE       
-#&gt;  8 blue   red    FALSE      
-#&gt;  9 red    red    TRUE       
+#&gt;  1 red    red    TRUE       
+#&gt;  2 blue   red    FALSE      
+#&gt;  3 blue   red    FALSE      
+#&gt;  4 red    blue   FALSE      
+#&gt;  5 red    red    TRUE       
+#&gt;  6 red    blue   FALSE      
+#&gt;  7 blue   red    FALSE      
+#&gt;  8 red    blue   FALSE      
+#&gt;  9 blue   red    FALSE      
 #&gt; 10 blue   red    FALSE      
 #&gt; # … with 9,990 more rows</code></pre>
 <p>All that remains is to compute the relative frequency of the observed outcomes from our many simulations.</p>
@@ -501,15 +501,15 @@ two_draw_results</code></pre>
 <pre><code>#&gt; # A tibble: 2 x 3
 #&gt;   color_match     n proportion
 #&gt; * &lt;lgl&gt;       &lt;int&gt;      &lt;dbl&gt;
-#&gt; 1 FALSE        5913      0.591
-#&gt; 2 TRUE         4087      0.409</code></pre>
+#&gt; 1 FALSE        5991      0.599
+#&gt; 2 TRUE         4009      0.401</code></pre>
 </div>
 </div>
 <div id="practice" class="section level2">
 <h2>Practice</h2>
 <p>Suppose you roll two fair six-sided dice. Which has a higher probability: the square of dice roll 1 is equal to dice roll 2; or the absolute value of the difference between dice roll 1 and dice roll 2 is equal to 4.</p>
 <p>Perform a simulation to compute this empirical probability.</p>
-<p>Write down your guess to the answer before you calculate it.</p>
+<p>Write down your guess to the answer before you calculate it. ***</p>
 </div>
 <div id="additional-resources-please-look-at-before-weds." class="section level2">
 <h2>Additional Resources-please look at before Weds.</h2>
