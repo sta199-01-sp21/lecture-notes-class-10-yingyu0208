@@ -420,10 +420,10 @@ glimpse(Arthritis)</code></pre>
 #&gt;   Sum       42   14     28  84</code></pre>
 <ul>
 <li><p>How many patients were enrolled in the clinical trial? 84</p></li>
-<li><p>What is the probability a randomly selected patient received the placebo? 43/84</p></li>
-<li><p>What is the probability a randomly selected patient received the placebo and had a marked improvement? 7/43</p></li>
-<li><p>What is the probability a randomly selected patient received the placebo and the treatment?</p></li>
-<li><p>What is the probability a randomly selected patient had some improvement or was on the treatment?</p></li>
+<li><p>What is the probability a randomly selected patient received the placebo? ***43/84</p></li>
+<li><p>What is the probability a randomly selected patient received the placebo and had a marked improvement? ***7/84</p></li>
+<li><p>What is the probability a randomly selected patient received the placebo and the treatment? ***0; disjoint probability</p></li>
+<li><p>What is the probability a randomly selected patient had some improvement or was on the treatment? ***(14/84)+(41/84)-(7/84)=48/84</p></li>
 </ul>
 </div>
 <div id="using-computer-simulations-to-calculate-probabilities" class="section level2">
@@ -432,7 +432,7 @@ glimpse(Arthritis)</code></pre>
 <h4>Example</h4>
 <p>Recall that a <strong>vector</strong> is the basic building block in R. Let’s create a vector called <code>marbles</code>.</p>
 <pre class="r"><code>marbles &lt;- c(&quot;red&quot;, &quot;red&quot;, &quot;white&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;blue&quot;, &quot;red&quot;, &quot;blue&quot;)</code></pre>
-<p>Suppose we draw a single marble from our imaginary box, where all the marbles are equally likely to be selected. What is the probability the marble is blue? How about white?</p>
+<p>Suppose we draw a single marble from our imaginary box, where all the marbles are equally likely to be selected. What is the probability the marble is blue? <strong><em>3/8 How about white? </em></strong>1/8</p>
 <p>We can simulate this “drawing” with the <code>sample()</code> function.</p>
 <pre class="r"><code>sample(marbles, size = 1)</code></pre>
 <pre><code>#&gt; [1] &quot;red&quot;</code></pre>
@@ -443,7 +443,7 @@ glimpse(Arthritis)</code></pre>
 prop.table(counts)</code></pre>
 <pre><code>#&gt; draw_results
 #&gt;   blue    red  white 
-#&gt; 0.3737 0.4989 0.1274</code></pre>
+#&gt; 0.3699 0.5017 0.1284</code></pre>
 <p>How close is this value to the “true” probability?</p>
 <p><strong>To summarize our process:</strong></p>
 <ol style="list-style-type: decimal">
@@ -465,16 +465,16 @@ two_draw_results</code></pre>
 <pre><code>#&gt; # A tibble: 10,000 x 2
 #&gt;    draw_1 draw_2
 #&gt;    &lt;chr&gt;  &lt;chr&gt; 
-#&gt;  1 blue   blue  
-#&gt;  2 red    blue  
-#&gt;  3 blue   red   
+#&gt;  1 red    blue  
+#&gt;  2 red    red   
+#&gt;  3 red    red   
 #&gt;  4 blue   blue  
-#&gt;  5 blue   blue  
-#&gt;  6 red    red   
+#&gt;  5 blue   white 
+#&gt;  6 blue   red   
 #&gt;  7 red    red   
-#&gt;  8 red    blue  
-#&gt;  9 red    blue  
-#&gt; 10 red    blue  
+#&gt;  8 blue   red   
+#&gt;  9 red    red   
+#&gt; 10 blue   red   
 #&gt; # … with 9,990 more rows</code></pre>
 <p>How can we add a variable to <code>two_draw_results</code> to see if <code>draw_1</code> and <code>draw_2</code> match?</p>
 <pre class="r"><code>two_draw_results &lt;- two_draw_results %&gt;% 
@@ -483,16 +483,16 @@ two_draw_results</code></pre>
 <pre><code>#&gt; # A tibble: 10,000 x 3
 #&gt;    draw_1 draw_2 color_match
 #&gt;    &lt;chr&gt;  &lt;chr&gt;  &lt;lgl&gt;      
-#&gt;  1 blue   blue   TRUE       
-#&gt;  2 red    blue   FALSE      
-#&gt;  3 blue   red    FALSE      
+#&gt;  1 red    blue   FALSE      
+#&gt;  2 red    red    TRUE       
+#&gt;  3 red    red    TRUE       
 #&gt;  4 blue   blue   TRUE       
-#&gt;  5 blue   blue   TRUE       
-#&gt;  6 red    red    TRUE       
+#&gt;  5 blue   white  FALSE      
+#&gt;  6 blue   red    FALSE      
 #&gt;  7 red    red    TRUE       
-#&gt;  8 red    blue   FALSE      
-#&gt;  9 red    blue   FALSE      
-#&gt; 10 red    blue   FALSE      
+#&gt;  8 blue   red    FALSE      
+#&gt;  9 red    red    TRUE       
+#&gt; 10 blue   red    FALSE      
 #&gt; # … with 9,990 more rows</code></pre>
 <p>All that remains is to compute the relative frequency of the observed outcomes from our many simulations.</p>
 <pre class="r"><code>two_draw_results %&gt;% 
@@ -501,8 +501,8 @@ two_draw_results</code></pre>
 <pre><code>#&gt; # A tibble: 2 x 3
 #&gt;   color_match     n proportion
 #&gt; * &lt;lgl&gt;       &lt;int&gt;      &lt;dbl&gt;
-#&gt; 1 FALSE        6017      0.602
-#&gt; 2 TRUE         3983      0.398</code></pre>
+#&gt; 1 FALSE        5913      0.591
+#&gt; 2 TRUE         4087      0.409</code></pre>
 </div>
 </div>
 <div id="practice" class="section level2">
